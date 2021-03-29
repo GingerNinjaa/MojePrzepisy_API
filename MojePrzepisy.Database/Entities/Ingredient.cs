@@ -17,8 +17,8 @@ namespace MojePrzepisy.Database.Entities
 
 
         //Jeden składnik do wielu przepisów
-        [ForeignKey("Recipe")]
-        public int RecipeId { get; set; }
+        [ForeignKey("Recepie")]
+        public int RecepieId { get; set; }
         public virtual Recepie Recepie { get; set; }
     }
 }

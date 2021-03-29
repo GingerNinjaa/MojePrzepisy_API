@@ -2,6 +2,7 @@
 using MojePrzepisy.Database.Repositories;
 using System;
 using System.Threading.Tasks;
+using MojePrzepisy.Database.Repositories.Interfaces;
 
 namespace MojePrzepisy_API.Controllers
 {
@@ -12,18 +13,21 @@ namespace MojePrzepisy_API.Controllers
     {
         //połączenie do startup
         private RecepieRepository _settingsRepository;
+        //private readonly IRecepieRepository _recepieRepository;
 
-        public RecepieController(RecepieRepository settingsRepository)
+        public RecepieController(RecepieRepository settingsRepository) //, IRecepieRepository recepieRepository,  RecepieRepository _settingsRepository
         {
             //połączenie do bazy danych
             _settingsRepository = settingsRepository;
+            //_recepieRepository = recepieRepository;
         }
 
  
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
-            var recepie = _settingsRepository.GetAll();
+            var recepie = _settingsRepository.GetRecepieById(id);
+            //var recepie = _recepieRepository.GetAll();
             return Ok(recepie);
         }
     }

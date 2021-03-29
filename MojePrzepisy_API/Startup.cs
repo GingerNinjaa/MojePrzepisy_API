@@ -1,18 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using MojePrzepisy.Database;
+using MojePrzepisy.Database.Repositories;
+using MojePrzepisy.Database.Repositories.Interfaces;
 
 namespace MojePrzepisy_API
 {
@@ -28,25 +23,28 @@ namespace MojePrzepisy_API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MojePrzepisyDbContext>(options =>
-                options.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MojePrzepisy;Trusted_Connection=True;"));
-
-
+              services.AddDbContext<MojePrzepisyDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("SqlConnectionString"));
+            });
+            
             //swagger
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "MusicAPI", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "RecepieAPI", Version = "v1" });
             });
+
+            //dodawanie repo
+            services.AddScoped<RecepieRepository, RecepieRepository>();
 
             //Zwracanie api w XML
             services.AddMvc().AddXmlSerializerFormatters();
-
 
             services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)  //, IServiceProvider serviceProvider
         {
             if (env.IsDevelopment())
             {
@@ -68,7 +66,7 @@ namespace MojePrzepisy_API
                 endpoints.MapControllers();
             });
 
-            var database = serviceProvider.GetService<MojePrzepisyDbContext>();
+            //var database = serviceProvider.GetService<MojePrzepisyDbContext>();
         }
     }
 }

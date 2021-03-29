@@ -29,9 +29,11 @@ namespace MojePrzepisy.Database.Entities
         [NotMapped]
         public IFormFile Image { get; set; }
         [NotMapped]
+        //public ICollection<Ingredient> Ingredients { get; set; }
         public virtual List<Ingredient> Ingredientses { get; set; }
         [NotMapped]
-        public virtual List<PreparationStep> PreparationStepses { get; set; }
+        //public ICollection<PreparationStep> PreparationSteps { get; set; }
+         public virtual List<PreparationStep> PreparationStepses { get; set; }
 
         //Wiele przepisow do jednego usera 
         [ForeignKey("User")]
