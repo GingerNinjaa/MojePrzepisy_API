@@ -13,7 +13,6 @@ namespace MojePrzepisy.Database.Repositories
 
         public void UpdateSetting(Recepie setting)
         {
-            
             SaveChanges();
             return;
 
