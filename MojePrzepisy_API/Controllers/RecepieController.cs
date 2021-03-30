@@ -9,23 +9,21 @@ using Microsoft.AspNetCore.Http;
 namespace MojePrzepisy_API.Controllers
 {
 
-    [Route("[controller]")]
+    [Route("[controller]/")]
     [ApiController]
     public class RecepieController : Controller
     {
         //połączenie do startup
         private RecepieRepository _settingsRepository;
-        //private readonly IRecepieRepository _recepieRepository;
-
         public
-            RecepieController(
-                RecepieRepository settingsRepository) //, IRecepieRepository recepieRepository,  RecepieRepository _settingsRepository
+            RecepieController(RecepieRepository settingsRepository) //, IRecepieRepository recepieRepository,  RecepieRepository _settingsRepository
         {
             //połączenie do bazy danych
             _settingsRepository = settingsRepository;
-            //_recepieRepository = recepieRepository;
+            
         }
-        [Authorize]
+
+        //[Authorize]
         [HttpGet("{id}")]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
         public async Task<IActionResult> Get(int id)
@@ -35,7 +33,7 @@ namespace MojePrzepisy_API.Controllers
             return Ok(recepie);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("[action]")]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
         public IActionResult AllRecepiesPartial(int? pageNumber, int? pageSize)
@@ -45,7 +43,7 @@ namespace MojePrzepisy_API.Controllers
             return Ok(recepiePartial);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("[action]")]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
         public IActionResult FindRecepies(string recipeTitle)
@@ -55,9 +53,9 @@ namespace MojePrzepisy_API.Controllers
             return Ok(recepie);
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("[action]")]
-        [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
+        //[ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
         public IActionResult AddRecepie([FromBody] Recepie recepie)
         {
             bool resoult = _settingsRepository.AddRecepie(recepie);
@@ -70,11 +68,11 @@ namespace MojePrzepisy_API.Controllers
             {
                 return StatusCode(StatusCodes.Status501NotImplemented);
             }
-            
+
         }
 
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("[action]")]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
         public IActionResult AddRecepieImg([FromForm] Recepie recepie)
@@ -91,10 +89,10 @@ namespace MojePrzepisy_API.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("[action]")]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
-        public IActionResult UpdateRecepie([FromBody] Recepie recepie ,int id)
+        public IActionResult UpdateRecepie([FromBody] Recepie recepie, int id)
         {
             var resoult = _settingsRepository.EditRecepie(id, recepie);
 
@@ -108,7 +106,7 @@ namespace MojePrzepisy_API.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPut("[action]")]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
         public IActionResult UpdateRecepieImg([FromBody] Recepie recepie, int id)
@@ -125,7 +123,7 @@ namespace MojePrzepisy_API.Controllers
             }
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpDelete("[action]/{id}")]
         public IActionResult DeleteRecepie(int id)
         {

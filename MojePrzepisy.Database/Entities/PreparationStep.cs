@@ -5,6 +5,7 @@ namespace MojePrzepisy.Database.Entities
 {
     public class PreparationStep
     {
+        [Key]
         public int Id { get; set; }
         [MaxLength(20)]
         public int StepNumber { get; set; }

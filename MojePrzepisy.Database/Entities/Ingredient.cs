@@ -8,6 +8,7 @@ namespace MojePrzepisy.Database.Entities
 {
     public class Ingredient
     {
+        [Key]
         public int Id { get; set; }
         [MaxLength(100)]
         public string Name { get; set; }

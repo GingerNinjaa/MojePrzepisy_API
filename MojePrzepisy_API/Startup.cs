@@ -1,3 +1,6 @@
+using System;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MojePrzepisy.Database;
 using MojePrzepisy.Database.Repositories;
@@ -38,12 +42,30 @@ namespace MojePrzepisy_API
 
             //dodawanie repo
             services.AddScoped<RecepieRepository, RecepieRepository>();
+            services.AddScoped<UserRepository, UserRepository>();
 
             //Zwracanie api w XML
             services.AddMvc().AddXmlSerializerFormatters();
 
             //Cashing
             services.AddResponseCaching();
+
+            //JWT
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Tokens:Issuer"],
+                        ValidAudience = Configuration["Tokens:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"])),
+                        ClockSkew = TimeSpan.Zero,
+                    };
+                });
 
 
             services.AddControllers();
@@ -70,7 +92,7 @@ namespace MojePrzepisy_API
             app.UseRouting();
 
             app.UseAuthorization();
-
+            //app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

@@ -15,6 +15,7 @@ namespace MojePrzepisy.Database.Repositories
     public class RecepieRepository : BaseRepository<Recepie>, IRecepieRepository
     {
         protected override DbSet<Recepie> DbSet => _dbContext.Recepies;
+
         //private IRecepieRepository ;
 
 

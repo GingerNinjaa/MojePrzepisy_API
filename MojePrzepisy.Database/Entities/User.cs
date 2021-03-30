@@ -5,6 +5,7 @@ namespace MojePrzepisy.Database.Entities
 {
     public class User
     {
+        [Key]
         public int Id { get; set; }
         [MaxLength(100)]
         [Required]
