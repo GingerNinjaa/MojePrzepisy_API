@@ -6,7 +6,7 @@ namespace MojePrzepisy.Database.Repositories.Interfaces
     public interface IRecepieRepository
     {
         List<Recepie> GetAll();
-        void UpdateRecepie(Recepie recepie);
+        bool EditRecepie(int id, Recepie recepie);
         void SaveChanges();
     }
 }
