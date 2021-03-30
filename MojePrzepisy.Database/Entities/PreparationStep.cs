@@ -14,6 +14,6 @@ namespace MojePrzepisy.Database.Entities
         //Jeden krok do wielu przepisów
         [ForeignKey("Recepie")]
         public int RecepieId { get; set; }
-        public virtual Recepie Recepie { get; set; }
+        //public virtual Recepie Recepie { get; set; }
     }
 }

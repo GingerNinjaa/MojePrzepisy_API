@@ -11,13 +11,14 @@ namespace MojePrzepisy.Database.Repositories.Base
     {
         //zmienna przechowująca bazedanych
         protected MojePrzepisyDbContext _dbContext;
-
         //referencja do tabelki 
         protected abstract DbSet<Entity> DbSet { get; }
+        
 
         public BaseRepository(MojePrzepisyDbContext dbContext)
         {
             this._dbContext = dbContext;
+                
         }
 
         public List<Entity> GetAll()

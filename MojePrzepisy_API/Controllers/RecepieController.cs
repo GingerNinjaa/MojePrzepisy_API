@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MojePrzepisy.Database.Entities;
 using MojePrzepisy.Database.Repositories;
-using System;
-using System.Threading.Tasks;
-using MojePrzepisy.Database.Repositories.Interfaces;
+using System.Linq;
 
 namespace MojePrzepisy_API.Controllers
 {
-    
+
     [Route("[controller]")]
     [ApiController]
     public class RecepieController : Controller
@@ -24,11 +23,12 @@ namespace MojePrzepisy_API.Controllers
 
  
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+       // public async Task<IActionResult> Get(int id)
+        public IQueryable<Recepie>  Get(int id)
         {
             var recepie = _settingsRepository.GetRecepieById(id);
             //var recepie = _recepieRepository.GetAll();
-            return Ok(recepie);
+            return recepie;
         }
     }
 }

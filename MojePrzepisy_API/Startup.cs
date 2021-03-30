@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,8 @@ namespace MojePrzepisy_API
             {
                 options.UseSqlServer(Configuration.GetConnectionString("SqlConnectionString"));
             });
-            
+
+
             //swagger
             services.AddSwaggerGen(options =>
             {
@@ -40,7 +42,16 @@ namespace MojePrzepisy_API
             //Zwracanie api w XML
             services.AddMvc().AddXmlSerializerFormatters();
 
+            //Cashing
+            services.AddResponseCaching();
+
+
             services.AddControllers();
+
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

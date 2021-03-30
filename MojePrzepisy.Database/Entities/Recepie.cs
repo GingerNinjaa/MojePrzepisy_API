@@ -28,17 +28,17 @@ namespace MojePrzepisy.Database.Entities
         public string Category { get; set; }
         [NotMapped]
         public IFormFile Image { get; set; }
-        [NotMapped]
-        //public ICollection<Ingredient> Ingredients { get; set; }
-        public virtual List<Ingredient> Ingredientses { get; set; }
-        [NotMapped]
-        //public ICollection<PreparationStep> PreparationSteps { get; set; }
-         public virtual List<PreparationStep> PreparationStepses { get; set; }
+        //[NotMapped]
+        public ICollection<Ingredient> Ingredients { get; set; }
+        //public virtual List<Ingredient> Ingredientses { get; set; }
+       // [NotMapped]
+        public ICollection<PreparationStep> PreparationSteps { get; set; }
+        // public virtual List<PreparationStep> PreparationStepses { get; set; }
 
         //Wiele przepisow do jednego usera 
         [ForeignKey("User")]
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        //public virtual User User { get; set; }
 
         // one Recipe
         // to many Ingredients
