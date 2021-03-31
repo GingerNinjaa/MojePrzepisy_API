@@ -125,6 +125,7 @@ namespace MojePrzepisy_API.Controllers
 
         //[Authorize]
         [HttpDelete("[action]/{id}")]
+        [IgnoreAntiforgeryToken]
         public IActionResult DeleteRecepie(int id)
         {
             var resoult = _settingsRepository.DeleteById(id);

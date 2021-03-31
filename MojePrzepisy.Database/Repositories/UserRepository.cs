@@ -3,10 +3,11 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MojePrzepisy.Database.Entities;
 using MojePrzepisy.Database.Repositories.Base;
+using System.Web.Helpers;
 
 namespace MojePrzepisy.Database.Repositories
 {
-   public class UserRepository : BaseRepository<User>
+    public class UserRepository : BaseRepository<User>
     {
 
         protected override DbSet<User> DbSet => _dbContext.Users;
@@ -15,11 +16,13 @@ namespace MojePrzepisy.Database.Repositories
 
         public UserRepository(MojePrzepisyDbContext dbContext) : base(dbContext)
         {
-                
+
         }
 
         public bool Register(User user)
         {
+
+
             try
             {
                 var userWithSameEmail = _dbContext.Users.Where(u => u.Email == user.Email).SingleOrDefault();
@@ -32,8 +35,8 @@ namespace MojePrzepisy.Database.Repositories
                 {
                     Name = user.Name,
                     Email = user.Email,
-                    // Password = SecurePasswordHasherHelper.Hash(user.Password)
-                    Password = user.Password,
+                    Password = SavePassword(user.Password),
+                    //Password = user.Password, oryginal
                     Role = "User"
                 };
                 _dbContext.Users.Add(userObj);
@@ -44,7 +47,7 @@ namespace MojePrzepisy.Database.Repositories
             {
                 return false;
             }
-            
+
         }
 
         public bool Login(User user)
@@ -52,40 +55,46 @@ namespace MojePrzepisy.Database.Repositories
 
             try
             {
-                var userEmail = _dbContext.Users.FirstOrDefault(u => u.Email == user.Email);
+
+                //Email Chesking
+                var userEmail = _dbContext.Users.Where(x => x.Email.Equals(user.Email)).Select(user1 => user1.Email).FirstOrDefault();
                 if (userEmail == null)
                 {
                     return false;
                     //return NotFound();
                 }
 
-                // var password = SecurePasswordHasherHelper.Verify(user.Password);
-                if (userEmail.Password.Equals(user.Password) == false)
+                //Password checking
+                if (CheckPassword(user.Password, userEmail) == true)
+                {
+                    return true;
+                }
+                else
                 {
                     return false;
-                    //return Unauthorized();
                 }
 
-                //var token = _authService.GenerateAccessToken(claims);
-                //JwtSecurityToken token = GenerateJSONWebToken(user);
-                //var token = GenerateJSONWebToken(user);
 
-                //return new ObjectResult(new
-                //{
-                //    access_token = token,
-                //    //creation_Time = token.ValidFrom,
-                //    //expiration_Time = token.ValidTo,
-                //    user_id = userEmail.Id,
-                //    user_Name = userEmail.Name
-                //});
-
-                return true;
             }
             catch (Exception e)
             {
                 return false;
             }
-            
+
+        }
+
+        public string SavePassword(string unhashedPassword)
+        {
+            string hashedPassword = Crypto.HashPassword(unhashedPassword);
+            return hashedPassword;
+
+        }
+
+        public bool CheckPassword(string unhashedPassword, string email)
+        {
+            string savedHashedPassword = _dbContext.Users.Where(user => user.Email.Equals(email)).Select(user => user.Password).FirstOrDefault();//get hashedPassword from where you saved it
+
+            return Crypto.VerifyHashedPassword(savedHashedPassword, unhashedPassword);
         }
     }
 }

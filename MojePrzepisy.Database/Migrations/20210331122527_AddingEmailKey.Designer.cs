@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MojePrzepisy.Database;
 
 namespace MojePrzepisy.Database.Migrations
 {
     [DbContext(typeof(MojePrzepisyDbContext))]
-    partial class MojePrzepisyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210331122527_AddingEmailKey")]
+    partial class AddingEmailKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -8,10 +8,11 @@ namespace MojePrzepisy.Database.Entities
         [Key]
         public int Id { get; set; }
         [MaxLength(100)]
-        [Required]
+        //[Required]
         public string Name { get; set; }
         [MaxLength(100)]
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }

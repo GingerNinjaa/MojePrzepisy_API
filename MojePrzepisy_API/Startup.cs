@@ -1,9 +1,6 @@
-using System;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MojePrzepisy.Database;
 using MojePrzepisy.Database.Repositories;
-using MojePrzepisy.Database.Repositories.Interfaces;
+using System;
+using System.Text;
 
 namespace MojePrzepisy_API
 {
@@ -70,10 +68,12 @@ namespace MojePrzepisy_API
 
             services.AddControllers();
 
-            services.AddControllersWithViews(options =>
-            {
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            });
+
+            //CHECK what is this 
+            //services.AddControllersWithViews(options =>
+            //{
+            //    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,14 +92,13 @@ namespace MojePrzepisy_API
             app.UseRouting();
 
             app.UseAuthorization();
-            //app.UseAuthentication();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
 
-            //var database = serviceProvider.GetService<MojePrzepisyDbContext>();
         }
     }
 }
