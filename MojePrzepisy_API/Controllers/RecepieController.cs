@@ -71,7 +71,6 @@ namespace MojePrzepisy_API.Controllers
 
         }
 
-
         //[Authorize]
         [HttpPost("[action]")]
         [ResponseCache(Duration = 360, Location = ResponseCacheLocation.Any)]
@@ -126,9 +125,9 @@ namespace MojePrzepisy_API.Controllers
         //[Authorize]
         [HttpDelete("[action]/{id}")]
         [IgnoreAntiforgeryToken]
-        public IActionResult DeleteRecepie(int id)
+        public async Task<IActionResult> DeleteRecepie(int id)
         {
-            var resoult = _settingsRepository.DeleteById(id);
+            bool resoult = await _settingsRepository.DeleteById(id);
 
             if (resoult == true)
             {

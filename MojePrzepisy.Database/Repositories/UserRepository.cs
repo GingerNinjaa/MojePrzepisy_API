@@ -21,15 +21,12 @@ namespace MojePrzepisy.Database.Repositories
 
         public bool Register(User user)
         {
-
-
             try
             {
                 var userWithSameEmail = _dbContext.Users.Where(u => u.Email == user.Email).SingleOrDefault();
                 if (userWithSameEmail != null)
                 {
                     return false;
-                    // return BadRequest("User with same email already exists");
                 }
                 var userObj = new User
                 {
@@ -47,16 +44,13 @@ namespace MojePrzepisy.Database.Repositories
             {
                 return false;
             }
-
         }
 
         public bool Login(User user)
         {
-
             try
             {
-
-                //Email Chesking
+                //Email checking
                 var userEmail = _dbContext.Users.Where(x => x.Email.Equals(user.Email)).Select(user1 => user1.Email).FirstOrDefault();
                 if (userEmail == null)
                 {
@@ -73,27 +67,22 @@ namespace MojePrzepisy.Database.Repositories
                 {
                     return false;
                 }
-
-
             }
             catch (Exception e)
             {
                 return false;
             }
-
         }
 
         public string SavePassword(string unhashedPassword)
         {
             string hashedPassword = Crypto.HashPassword(unhashedPassword);
             return hashedPassword;
-
         }
 
         public bool CheckPassword(string unhashedPassword, string email)
         {
             string savedHashedPassword = _dbContext.Users.Where(user => user.Email.Equals(email)).Select(user => user.Password).FirstOrDefault();//get hashedPassword from where you saved it
-
             return Crypto.VerifyHashedPassword(savedHashedPassword, unhashedPassword);
         }
     }

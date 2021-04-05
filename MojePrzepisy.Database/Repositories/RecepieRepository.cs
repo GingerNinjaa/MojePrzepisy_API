@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using MojePrzepisy.Database.Entities;
+using MojePrzepisy.Database.Helpers;
 using MojePrzepisy.Database.Repositories.Base;
 using MojePrzepisy.Database.Repositories.Interfaces;
 
@@ -28,7 +29,7 @@ namespace MojePrzepisy.Database.Repositories
         {
             try
             {
-                var recipe = this._dbContext.Recepies
+                var recipe =   this._dbContext.Recepies
                     .Include(x => x.Ingredients)
                     .Include(c => c.PreparationSteps)
                     .Where(v => v.Id.Equals(id));
@@ -120,15 +121,13 @@ namespace MojePrzepisy.Database.Repositories
         {
             try
             {
-                if (recepie== null)
+                if (recepie == null)
                 {
                     return false;
                 }
 
                 _dbContext.Recepies.Add(recepie);
                 SaveChanges();
-
-                //return StatusCode(StatusCodes.Status201Created);
 
                 return true;
             }
@@ -148,16 +147,23 @@ namespace MojePrzepisy.Database.Repositories
 
                 if (recepieInDatabase != null)
                 {
-                    var guid = Guid.NewGuid();
-                    var filePath = Path.Combine("wwwroot", guid + ".jpg");
+                    //var guid = Guid.NewGuid();
                     //var filePath = Path.Combine("wwwroot", guid + ".jpg");
-                    if (recepie.Image != null)
+                    //if (recepie.Image != null)
+                    //{
+                    //    var fileStream = new FileStream(filePath, FileMode.Create);
+                    //    recepie.Image.CopyTo(fileStream);
+                    //}
+
+                    //recepieInDatabase.ImageUrl = filePath.Remove(0, 7);
+
+                    //Maybe add temporary photo?
+                    if (recepie.Image == null)
                     {
-                        var fileStream = new FileStream(filePath, FileMode.Create);
-                        recepie.Image.CopyTo(fileStream);
+                        return false;
                     }
 
-                    recepieInDatabase.ImageUrl = filePath.Remove(0, 7);
+                    recepieInDatabase.ImageUrl = FileHelper.UploadImage(recepie.Image).ToString();
 
                     _dbContext.SaveChanges();
 
@@ -180,29 +186,18 @@ namespace MojePrzepisy.Database.Repositories
                 if (recepieInDatabase == null)
                 {
                     return false;
-                    //return NotFound("No record found against this Id");
                 }
                 else
                 {
-                    var guid = Guid.NewGuid();
-                    var filePath = Path.Combine("wwwroot", guid + ".jpg");
-                    if (recepie.Image != null)
-                    {
-                        var fileStream = new FileStream(filePath, FileMode.Create);
-                        recepie.Image.CopyTo(fileStream);
-                        recepieInDatabase.ImageUrl = filePath.Remove(0, 7);
-                    }
-
+                    recepieInDatabase.ImageUrl = FileHelper.EditImage(recepie.Image, recepieInDatabase.ImageUrl).ToString();
                     _dbContext.SaveChanges();
                     return true;
-                    //return Ok("Record updated successfully");
                 }
             }
             catch (Exception e)
             {
                 return false;
             }
-
         }
 
         public bool EditRecepie(int id, Recepie recepie)
@@ -215,11 +210,9 @@ namespace MojePrzepisy.Database.Repositories
                 if (recepieInDatabase == null)
                 {
                     return false;
-                    //return NotFound("No record found against this Id");
                 }
                 else
                 {
-
                     recepieInDatabase.Title = recepie.Title;
                     recepieInDatabase.Description = recepie.Description;
                     recepieInDatabase.PreparationTime = recepie.PreparationTime;
@@ -232,18 +225,15 @@ namespace MojePrzepisy.Database.Repositories
 
                     SaveChanges();
                     return true;
-                    //return Ok("Record updated successfully");
                 }
             }
             catch (Exception e)
             {
                 return false;
             }
-
-
         }
 
-        public bool DeleteById(int id)
+        public async Task<bool> DeleteById(int id)
         {
             try
             {
@@ -254,24 +244,22 @@ namespace MojePrzepisy.Database.Repositories
                 if (recepieId == null)
                 {
                     return false;
-                    // return NotFound("No record found against this Id");
                 }
                 else
                 {
+                    var IsImageDeleted = await FileHelper.DeleteImage(recepieId.ImageUrl);
+                    //Remove from Database
                     _dbContext.Recepies.Remove(recepieId);
                     _dbContext.Ingredients.RemoveRange(ingredientsesList);
                     _dbContext.PreparationSteps.RemoveRange(preparationStepsList);
                     _dbContext.SaveChanges();
                     return true;
-                    //return Ok("Record deleted");
                 }
             }
             catch (Exception e)
             {
                 return false;
             }
-
         }
-
     }
 }
